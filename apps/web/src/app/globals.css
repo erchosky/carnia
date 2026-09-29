@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/* Tema (antes en tailwind.config.ts). Cada variable genera sus utilidades: bg-bg-card, text-accent… */
+@theme {
+  --color-bg: #07091a;
+  --color-bg-subtle: #0d1228;
+  --color-bg-card: #131a35;
+  --color-bg-border: #1c2540;
+  --color-accent: #ff3d57;
+  --color-accent-hover: #ff5870;
+  --color-accent-glow: #ff3d5733;
+  --color-primary: #16c566;
+  --color-primary-hover: #1ed977;
+  --color-primary-glow: #16c56633;
+  --color-win: #16c566;
+  --color-lose: #ff3d57;
+  --color-warn: #f59e0b;
+  --color-muted: #6b7a99;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, Inter, sans-serif;
+  --font-display: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, monospace;
+
+  --animate-pulse-glow: pulse-glow 1.5s ease-in-out infinite;
+  --animate-shake: shake 0.4s ease-in-out;
+  --animate-pop-in: pop-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-slide-up: slide-up 0.3s ease-out;
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(22, 197, 102, 0.5); }
+    50% { box-shadow: 0 0 0 14px rgba(22, 197, 102, 0); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  @keyframes pop-in {
+    0% { transform: scale(0.85); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes slide-up {
+    0% { transform: translateY(10px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+}
+
+/*
+  Compatibilidad con los valores por defecto de Tailwind 3: en v4 los bordes usan
+  currentColor y los botones no muestran cursor de puntero.
+*/
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Base de los botones; como utilidad para poder usarla con @apply en las variantes. */
+@utility btn {
+  @apply inline-flex items-center justify-center font-semibold rounded-xl
+         transition-all duration-150 select-none
+         active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html, body {
+  background-color: #07091a;
+  color: #ededf3;
+  min-height: 100%;
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+@layer components {
+  .btn-primary {
+    @apply btn bg-primary text-white px-6 py-3 hover:bg-primary-hover
+           shadow-[0_0_24px_-4px_rgba(22,197,102,0.4)];
+  }
+  .btn-danger {
+    @apply btn bg-accent text-white px-6 py-3 hover:bg-accent-hover
+           shadow-[0_0_24px_-4px_rgba(255,61,87,0.45)];
+  }
+  .btn-secondary {
+    @apply btn bg-bg-card text-white px-6 py-3 border border-bg-border hover:bg-bg-subtle;
+  }
+  .btn-ghost {
+    @apply btn text-muted hover:text-white px-4 py-2;
+  }
+  .card {
+    @apply bg-bg-card border border-bg-border rounded-2xl;
+  }
+  .input {
+    @apply w-full bg-bg-subtle border border-bg-border rounded-xl px-4 py-3
+           text-white placeholder:text-muted
+           focus:outline-hidden focus:ring-2 focus:ring-accent/40 focus:border-accent
+           transition-colors;
+  }
+}

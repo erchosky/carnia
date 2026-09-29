@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: carnia
+          POSTGRES_PASSWORD: carnia
+          POSTGRES_DB: carnia
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U carnia"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://carnia:carnia@localhost:5432/carnia?schema=public
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck, lint, tests y build
+        run: pnpm exec turbo run typecheck lint test build
+
+      - name: Migraciones y seed contra PostgreSQL
+        run: |
+          pnpm --filter @carnia/db migrate:deploy
+          pnpm db:seed

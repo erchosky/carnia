@@ -1,0 +1,19 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# pnpm 10 no ejecuta scripts de instalación de dependencias salvo que se permitan.
+# Ninguno de estos es necesario: Prisma 7 usa el adapter `pg` y esbuild trae su binario
+# como dependencia opcional.
+ignoredBuiltDependencies:
+  - "@prisma/engines"
+  - esbuild
+  - prisma
+  - unrs-resolver
+
+# deepmerge-ts y mysql2: parches de seguridad en transitivas del CLI de Prisma (solo desarrollo).
+# socket.io: una sola copia (Nest fija una versión de parche anterior y los tipos chocan).
+overrides:
+  deepmerge-ts: ^8.0.0
+  mysql2: ^3.23.1
+  socket.io: 4.8.4

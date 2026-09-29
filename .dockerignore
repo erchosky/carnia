@@ -1,0 +1,17 @@
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+**/.env
+**/.env.local
+**/.env.*.local
+.playwright-cli
+**/.playwright-cli
+output
+*.tsbuildinfo
+.git
+.github
+.vscode
+.idea
+*.log

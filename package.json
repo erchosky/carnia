@@ -1,0 +1,26 @@
+{
+  "name": "carnia",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.34.6",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "db:generate": "pnpm --filter @carnia/db generate",
+    "db:migrate": "pnpm --filter @carnia/db migrate",
+    "db:seed": "pnpm --filter @carnia/db seed",
+    "db:studio": "pnpm --filter @carnia/db studio",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.9.9",
+    "turbo": "^2.11.5",
+    "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}

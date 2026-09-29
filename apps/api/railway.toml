@@ -1,0 +1,17 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/api/Dockerfile"
+
+[deploy]
+# Liveness — Railway reinicia el container si esto falla
+healthcheckPath = "/api/health/live"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+
+# Sticky sessions para WebSockets (en planes que lo soporten).
+# Aunque tenemos Redis adapter, sticky reduce latencia de reconnect.
+startCommand = "node apps/api/dist/main.js"
+
+[env]
+NODE_ENV = "production"
