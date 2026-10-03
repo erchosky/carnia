@@ -1,8 +1,10 @@
 # CarnIA
 
-Aplicación web para practicar el examen teórico del carné de conducir (DGT, permiso B) con partidas individuales, estudio dirigido, reto diario y PvP 1v1 en tiempo real.
+El teórico del carné, pero con partidas, retos y piques. CarnIA sirve para practicar las preguntas de la DGT del permiso B: puedes ir a tu bola, repasar lo que más fallas o jugar un 1 contra 1 en tiempo real.
 
-## Funcionalidades
+La idea es que estudiar señales y prioridades dé un poco menos de pereza. Si vas a fallar una pregunta, por lo menos que te explique por qué.
+
+## Qué trae
 
 - **Solo**: 10 preguntas cronometradas por categoría o mezcladas, puntuación por velocidad, explicación tras cada respuesta y XP. Incluye *Modo Trampa* (solo preguntas engañosas).
 - **PvP 1v1 en tiempo real**: sala privada por código o emparejamiento aleatorio, modos Clásico, Supervivencia (3 vidas) y Blitz, rondas/tiempo/categorías configurables, ELO, revancha y reconexión.
@@ -11,7 +13,7 @@ Aplicación web para practicar el examen teórico del carné de conducir (DGT, p
 - **Progresión**: niveles por XP, ranking por temporada, logros y perfiles públicos.
 - **Reglas rápidas**: mnemotecnias para lo más preguntado.
 
-## Arquitectura
+## Qué hay por dentro
 
 Monorepo **pnpm 10 + Turborepo**, TypeScript 6 en todo el código:
 
@@ -25,10 +27,10 @@ docs/                      Despliegue e historial de auditoría
 ```
 
 - **Datos**: PostgreSQL 16 vía Prisma 7 (driver adapter `pg`). **Redis 7** (opcional en local) para el adapter de Socket.IO, el ranking y el rate limiting.
-- **PvP server-authoritative**: el servidor valida respuestas, mide tiempos y calcula puntuación y ganador. Las reglas del juego son funciones puras (`apps/api/src/modules/game/engine`) con tests; el orquestador en tiempo real (`modules/realtime`) solo coordina timers, sockets y persistencia.
+- **El servidor manda en el PvP**: valida respuestas, mide tiempos y calcula puntuación y ganador. Las reglas del juego son funciones puras (`apps/api/src/modules/game/engine`) con tests; el orquestador en tiempo real (`modules/realtime`) solo coordina timers, sockets y persistencia.
 - **Contratos compartidos**: web y API importan los mismos esquemas y tipos de `@carnia/contracts`, así que un cambio de payload rompe la compilación en ambos lados.
 
-## Puesta en marcha
+## Cómo arrancarlo
 
 Requisitos: **Node.js 24** (`.nvmrc`; mínimo 22.12), Corepack (incluido en Node) y Docker (o PostgreSQL/Redis propios).
 
@@ -103,7 +105,7 @@ La web está preparada para Vercel (`apps/web/vercel.json`) y la API para Railwa
 
 Antes de exponerla públicamente: secretos reales, URLs HTTPS/WSS, `TRUST_PROXY`, `prisma migrate deploy`, borrar o cambiar las cuentas demo y configurar backups de PostgreSQL.
 
-## Limitaciones conocidas
+## Cosas que todavía tienen sus peros
 
 - Las salas PvP y las sesiones Solo viven en memoria del proceso: escalar la API a varias instancias requiere afinidad de sesión o mover ese estado a Redis.
 - Los tokens del cliente se guardan en `localStorage`; migrar a cookies `HttpOnly` reduciría el impacto de un XSS.
